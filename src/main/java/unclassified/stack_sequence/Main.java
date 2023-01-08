@@ -18,17 +18,14 @@ public class Main {
                     stack.push(++count);
                     sb.append("+\n");
                 }
-                stack.pop();
-                sb.append("-\n");
             } else {
-                if (stack.peek() == nextInt) {
-                    stack.pop();
-                    sb.append("-\n");
-                } else {
+                if (stack.peek() != nextInt) {
                     sb.replace(0, sb.length(), "NO");
                     break;
                 }
             }
+            stack.pop();
+            sb.append("-\n");
         }
         System.out.println(sb);
     }
