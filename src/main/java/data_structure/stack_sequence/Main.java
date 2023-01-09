@@ -1,4 +1,4 @@
-package unclassified.stack_sequence;
+package data_structure.stack_sequence;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
