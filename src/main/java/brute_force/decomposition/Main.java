@@ -1,4 +1,4 @@
-package bf.decomposition;
+package brute_force.decomposition;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -1,4 +1,4 @@
-package bf.director;
+package brute_force.director;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

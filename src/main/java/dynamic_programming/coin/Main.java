@@ -1,4 +1,4 @@
-package dp.coin;
+package dynamic_programming.coin;
 
 import java.util.*;
 

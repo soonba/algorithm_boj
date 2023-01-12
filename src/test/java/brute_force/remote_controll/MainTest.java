@@ -1,4 +1,4 @@
-package bf.remote_controll;
+package brute_force.remote_controll;
 
 import org.junit.jupiter.api.Test;
 
