@@ -6,6 +6,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/*
+ * BAEKJOON ONLINE JUDGE
+ * https://www.acmicpc.net
+ * Problem Number: 1017
+ * Level: Gold IV
+ * Algorithm: Brute Force
+ */
+
+/*
+building 의 y 좌표에 해당하는 static 변수 세팅
+기준 빌딩[b1, (x1,y1)] 에서 보이는지 판독할 빌딩[b2, (x2,y2)] 좌표에 선을 긋는 방정식 f(x)를 세우고(*)
+b1과 b2 사이의 모든 빌딩들[b3, (x3,y3)]에 대해 f(x3) 와 y3를 비교하여 보이는지 여부를 반환.
+보이는 빌딩의 개수를 세어 결과를 List 에 담는다. 모든 빌딩에 해당 과정을 수행하여 최대값을 출력한다.
+
+(*) f(x) = (x2-x1)/(y2-y1) * (x-x1) + y1
+ */
 public class Main {
     static double[] buildings;
     public static void main(String[] args) throws Exception {
@@ -26,14 +42,11 @@ public class Main {
         System.out.println(Collections.max(visibleCount));
     }
 
-    private static int countVisible(int x, double y) {
+    private static int countVisible(int x1, double y1) {
         int count = 0;
-        int x1 = x;
-        double y1 = y;
-        for (int i = 0; i < buildings.length; i++) {
+        for (int x2 = 0; x2 < buildings.length; x2++) {
             //선을 이을 빌딩
-            int x2 = i;
-            double y2 = buildings[i];
+            double y2 = buildings[x2];
 
             //같은 빌딩은 점프
             if (x1 == x2) {
