@@ -1,4 +1,4 @@
-package unclassified.make_one;
+package dynamic_programming.make_one;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,21 +16,12 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
         int[] DP = new int[N+1];
-//        Arrays.fill(DP, N);
-//        DP[0] = 0;
-//        DP[1] = 1;
-        for (int i = 0; i < DP.length; i++) {
-            DP[i] = i;
+        DP[0] = DP[1] = 0;
+        for (int i = 2; i <= N; i++) {
+            DP[i] = DP[i-1] + 1;
+            if(i % 2 == 0) DP[i] = Math.min(DP[i], DP[i/2] + 1);
+            if(i % 3 == 0) DP[i] = Math.min(DP[i], DP[i/3] + 1);
         }
-        for (int i = 2; i <=3; i++) {
-            for (int j = 1; j < N+1; j++) {
-                if(j < i || (DP[j] % i != 0)) {
-                    continue;
-                }
-                DP[j] = Math.min(DP[j], (DP[j]/i));
-            }
-        }
-
         System.out.println(DP[N]);
 
     }
