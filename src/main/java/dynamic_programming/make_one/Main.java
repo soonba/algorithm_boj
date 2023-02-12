@@ -2,7 +2,6 @@ package dynamic_programming.make_one;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 /*
  * BAEKJOON ONLINE JUDGE
