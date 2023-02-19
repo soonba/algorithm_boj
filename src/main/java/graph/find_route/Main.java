@@ -6,6 +6,21 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
+/*
+ * BAEKJOON ONLINE JUDGE
+ * https://www.acmicpc.net
+ * Problem Number: 11403
+ * Level: 실버 1
+ * Algorithm: Graph
+ */
+
+/*
+노드를 초기화해주고 정렬한다. 단방향 인접 리스트로 구현
+nxn 행렬의 '모든 점'에 대해 bfs 를 수행한다.
+결과를 출력한다.
+*/
+
 public class Main {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -35,7 +50,7 @@ public class Main {
                 String canGo = "0";
                 Queue<Integer> queue = new LinkedList<>();
                 queue.add(i);
-                while(!queue.isEmpty() && canGo != "1") {
+                while(!queue.isEmpty() && !canGo.equals("1")) {
                     Integer poll = queue.poll();
                     if(nodeList[poll] == null) {
                         break;
