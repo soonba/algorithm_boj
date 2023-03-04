@@ -16,7 +16,6 @@ public class Main {
         char[] chars = br.readLine().toCharArray();
         Deque<Character> deque = new ArrayDeque<>();
         deque.push(chars[0]);
-        int cur = 0;
         for (int i = 1; i < length; i++) {
             while((!deque.isEmpty()) && (erase > 0) && (chars[i] > deque.peek())) {
                 deque.poll();
@@ -25,14 +24,10 @@ public class Main {
             if(deque.size() < resultLength) {
                 deque.push(chars[i]);
             }
-            cur = i+1;
         }
         StringBuilder sb = new StringBuilder();
         while (!deque.isEmpty()) {
             sb.append(deque.pollLast());
-        }
-        for (int i = cur; i < length; i++) {
-            sb.append(chars[i]);
         }
         System.out.println(sb);
     }
