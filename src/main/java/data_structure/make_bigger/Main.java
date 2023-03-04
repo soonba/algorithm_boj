@@ -2,7 +2,8 @@ package data_structure.make_bigger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
 
@@ -13,24 +14,23 @@ public class Main {
         int erase = Integer.parseInt(s[1]);
         int resultLength = length - erase;
         char[] chars = br.readLine().toCharArray();
-        Stack<Character> stack = new Stack<>();
-        stack.push(chars[0]);
+        Deque<Character> deque = new ArrayDeque<>();
+        deque.push(chars[0]);
         int cur = 0;
         for (int i = 1; i < length; i++) {
-            while((!stack.isEmpty()) && (erase > 0) && (chars[i] > stack.peek())) {
-                stack.pop();
+            while((!deque.isEmpty()) && (erase > 0) && (chars[i] > deque.peek())) {
+                deque.poll();
                 erase--;
             }
-            if(stack.size() < resultLength) {
-                stack.push(chars[i]);
+            if(deque.size() < resultLength) {
+                deque.push(chars[i]);
             }
             cur = i+1;
         }
         StringBuilder sb = new StringBuilder();
-        while (!stack.isEmpty()) {
-            sb.append(stack.pop());
+        while (!deque.isEmpty()) {
+            sb.append(deque.pollLast());
         }
-        sb.reverse();
         for (int i = cur; i < length; i++) {
             sb.append(chars[i]);
         }
