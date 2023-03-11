@@ -18,6 +18,7 @@ import java.util.Arrays;
  */
 
 public class Main {
+    static int T;
     static int target;
     static int total = 0;
 
@@ -26,27 +27,22 @@ public class Main {
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] S = br.readLine().split(" ");
-        int T = Integer.parseInt(S[0]);
+        T = Integer.parseInt(S[0]);
         target = Integer.parseInt(S[1]);
         sequenceNum = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        dfs(0,0);
 
-        for (int i = 1; i <= T; i++) {
-            dfs(0,i,0,0);
-        }
-
-        System.out.println(total);
+        int result = target == 0 ? total-1 : total;
+        System.out.println(result);
     }
 
-    static void dfs(int count, int sequenceSize, int temp, int nowIdx) {
-        if(count == sequenceSize) {
-            if(temp == target) {
-                total++;
-            }
+    static void dfs(int count, int temp) {
+        if(count == T) {
+            if(temp == target) total++;
             return;
         }
+        dfs(count+1, temp+sequenceNum[count]);
+        dfs(count+1, temp);
 
-        for (int i = nowIdx; i < sequenceNum.length; i++) {
-            dfs(count + 1, sequenceSize, temp + sequenceNum[i],i+1);
-        }
     }
 }
