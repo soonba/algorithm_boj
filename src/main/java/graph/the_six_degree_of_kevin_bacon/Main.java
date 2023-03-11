@@ -1,23 +1,30 @@
 package graph.the_six_degree_of_kevin_bacon;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
+/*
+ * BAEKJOON ONLINE JUDGE
+ * https://www.acmicpc.net
+ * Problem Number: 1389
+ * Level: Silver 1
+ * Algorithm: Graph
+ */
 
+/*
+입력값을 파싱하고 리스트배열을 만들어 노드끼리 이어준다.
+모든 노드리스트들을 오름차순 정렬해준다.
+BFS를 돌며 가장 작은 케빈베이컨을 출력한다. (주석참조)
+ */
 public class Main {
     public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] s = br.readLine().split(" ");
-        int USER = Integer.parseInt(s[0]);
-        int NODE = Integer.parseInt(s[1]);
+        int USER = read();
+        int NODE = read();
 
         LinkedList<Integer>[] nodeList = new LinkedList[USER + 1];
         for (int i = 0; i < NODE; i++) {
-            String[] friend = br.readLine().split(" ");
-            int f1 = Integer.parseInt(friend[0]);
-            int f2 = Integer.parseInt(friend[1]);
+            int f1 = read();
+            int f2 = read();
             if (nodeList[f1] == null) nodeList[f1] = new LinkedList<>();
             if (nodeList[f2] == null) nodeList[f2] = new LinkedList<>();
             nodeList[f1].add(f2);
@@ -30,8 +37,10 @@ public class Main {
 
         int min_kevin_bacon_number = Integer.MAX_VALUE;
         int min_kevin_bacon_user = 0;
+        //유저 i에서
         for (int i = 1; i <= USER; i++) {
             int kevin_bacon_number = 0;
+            //유저 j까지의 케빈베이컨 수를 BFS로 계산
             for (int j = 1; j <= USER; j++) {
                 int[] nodeValue = new int[USER + 1];
                 if (i == j) continue;
@@ -58,6 +67,7 @@ public class Main {
                 }
                 kevin_bacon_number += aNodeValue;
             }
+            // 가장 작은 수와 유저를 갱신
             if (min_kevin_bacon_number > kevin_bacon_number) {
                 min_kevin_bacon_user = i;
             }
@@ -65,5 +75,11 @@ public class Main {
         }
 
         System.out.println(min_kevin_bacon_user);
+    }
+
+    private static int read() throws Exception {
+        int c, n = System.in.read() & 15;
+        while ((c = System.in.read()) > 32) n = (n << 3) + (n << 1) + (c & 15);
+        return n;
     }
 }
