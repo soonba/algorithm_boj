@@ -1,68 +1,127 @@
 package graph.chicken;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-class Location {
-    private final int r;
-    private final int c;
+class Position {
+    private final int row;
+    private final int col;
 
-    private int score; //치킨집 한정
-
-    public Location(int r, int c) {
-        this.r = r;
-        this.c = c;
+    public Position(int row, int col) {
+        this.row = row;
+        this.col = col;
     }
 
-    public void addChickenDistance(Location location) {
-        score += Math.abs(r-location.r) + Math.abs(c-location.c);
+    public int getRow() {
+        return row;
     }
 
-    public int getScore() {
-        return score;
+    public int getCol() {
+        return col;
+    }
+
+    public int calculate(Position position) {
+        return Math.abs(row - position.getRow()) + Math.abs(col - position.getCol());
     }
 }
 
-public class Main {
+class Chicken {
+    private final Position position;
 
-    static List<Location> houseList = new ArrayList<>();
-    static List<Location> chickenList = new ArrayList<>();
+    public Chicken(Position position) {
+        this.position = position;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+}
+
+class House {
+    private final Position position;
+
+    public House(Position position) {
+        this.position = position;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+}
+
+//치킨집, 집을 리스트에 담는다. n^2
+//모든 집을 순회하며 가까운 치킨집 순의 리스트를 담는다.
+//치킨집 조합 배열을 순회하고 그 안에서 집을 순회하며 각 집별 가장 가까운 치킨집 include 의 거리 값을 계산한다.
+//거리값의 합의 최소를 출력한다.
+
+public class Main {
+    static final List<List<Integer>> combinationList = new ArrayList<>();
+    static List<Chicken> chickenList = new ArrayList<>();
+    static List<House> houseList = new ArrayList<>();
+
+    static void addCombination(List<Integer> arr, boolean[] visited, int n) {
+        ArrayList<Integer> aCombination = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (visited[i]) {
+                aCombination.add(arr.get(i));
+            }
+        }
+        combinationList.add(aCombination);
+    }
+
+    static void combination(List<Integer> arr, boolean[] visited, int start, int n, int r) {
+        if (r == 0) {
+            addCombination(arr, visited, n);
+            return;
+        }
+
+        for (int i = start; i < n; i++) {
+            visited[i] = true;
+            combination(arr, visited, i + 1, n, r - 1);
+            visited[i] = false;
+        }
+    }
+
     public static void main(String[] args) throws Exception {
-        int N = read(); // n x n 크기
-        int M = read(); // M개 남김
+        int N = read(); // n x n
+        int M = read(); // 최대 개수
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 int now = read();
                 if (now == 1) {
-                    Location location = new Location(i, j);
-                    addAllChickenScore(location);
-                    houseList.add(location);
-                } else if (now == 2) {
-                    Location location = new Location(i, j);
-                    chickenList.add(initChickenScore(location));
+                    houseList.add(new House(new Position(i, j)));
+                }
+
+                if (now == 2) {
+                    chickenList.add(new Chicken(new Position(i, j)));
                 }
             }
-
         }
 
-        chickenList.sort((a,b) -> b.getScore() - a.getScore());
-        int total = 0;
-        for (int i = 0; i < M; i++) {
-            total += chickenList.get(i).getScore();
+        //치킨집의 크기만큼의 int 리스트 생성
+        List<Integer> combinationTarget = IntStream.range(0, chickenList.size())
+                .boxed()
+                .collect(Collectors.toList());
+        combination(combinationTarget, new boolean[combinationTarget.size()], 0, combinationTarget.size(), M);
+
+        //각 조합을 돌며 최소값 갱신
+        int minScore = Integer.MAX_VALUE;
+        for (List<Integer> aCombination : combinationList) {
+            int tempCount = 0;
+            for (House house : houseList) {
+                tempCount += aCombination.stream().map(m -> {
+                    Chicken chicken = chickenList.get(m);
+                    return house.getPosition().calculate(chicken.getPosition());
+                }).min(Comparator.comparingInt(a -> a)).get();
+            }
+            minScore = Math.min(minScore, tempCount);
         }
-        System.out.println(total);
-    }
 
-    private static Location initChickenScore(Location location) {
-        //치킨집의 시작 점수 초기화
-        houseList.forEach(location::addChickenDistance);
-        return location;
-    }
-
-    private static void addAllChickenScore(Location location) {
-        // 집이 나오면 기존의 모든 치킨집에 스코어를 반영한다.
-        chickenList.forEach(chicken -> chicken.addChickenDistance(location));
+        System.out.println(minScore);
     }
 
     private static int read() throws Exception {
@@ -70,4 +129,5 @@ public class Main {
         while ((c = System.in.read()) > 32) n = (n << 3) + (n << 1) + (c & 15);
         return n;
     }
+
 }
