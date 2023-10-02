@@ -1,5 +1,7 @@
 package implementation.fine_dust;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +17,18 @@ public class Main {
     static final int[] dy = {0, 0, -1, 1};
 
     public static void main(String[] args) throws Exception {
-        R = read();
-        C = read();
-        int T = read();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] S = br.readLine().split(" ");
+
+        R = Integer.parseInt(S[0]);
+        C = Integer.parseInt(S[1]);
+        int T = Integer.parseInt(S[2]);
         room = new int[R][C];
 
         for (int i = 0; i < R; i++) {
+            String[] SS = br.readLine().split(" ");
             for (int j = 0; j < C; j++) {
-                int now = read();
+                int now = Integer.parseInt(SS[j]);
                 room[i][j] = now;
                 if(now == -1) {
                     //i행 1열
@@ -30,35 +36,15 @@ public class Main {
                 }
             }
         }
-//        print("초기화 후");
 
         for (int i = 0; i < T; i++) {
             fineDustProcess();
-//            print(i+"번째 fineDustProcess 후");
             airCleanerProcess();
-//            print(i+"번째 airCleanerProcess 후");
         }
 
-//        print("점수계산 직전");
         int score = calcFineDustScore();
         System.out.println(score);
     }
-
-//    private static void print(String s) {
-//        System.out.println("=========="+s+"==========");
-//        for (int i = 0; i < R; i++) {
-//            for (int j = 0; j < C; j++) {
-//                int now = room[i][j];
-//                String padding = "";
-//                if(now >= 0 && now < 10) {
-//                    padding = " ";
-//                }
-//                System.out.print(padding + now+" ");
-//            }
-//            System.out.println();
-//        }
-//        System.out.println("=========="+s+"==========");
-//    }
 
     private static int calcFineDustScore() {
         int score = 0;
@@ -148,12 +134,5 @@ public class Main {
             addCount++;
         }
         tempRoom[r][c] += now - (addCount * addValue);
-    }
-
-    private static int read() throws Exception {
-        int c, n = System.in.read() & 15;
-        while ((c = System.in.read()) > 32) n = (n << 3) + (n << 1) + (c & 15);
-        if(n == 131) return -1;
-        return n;
     }
 }
