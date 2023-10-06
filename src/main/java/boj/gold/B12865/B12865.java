@@ -1,4 +1,4 @@
-package boj.gold;
+package boj.gold.B12865;
 
 // 1. 물건을 쪼갤 수 없음 -> 0-1 배낭 문제
 // 2. 점화식을 찾는다.

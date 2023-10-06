@@ -1,4 +1,4 @@
-package boj.gold;
+package boj.gold.B1753;
 
 import java.util.*;
 
