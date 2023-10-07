@@ -15,7 +15,7 @@ package boj.gold.B1504;
 //2 3
 public class Main {
     static int n;
-    static final int MAXIMUM_DISTANCE = 800 * 1001;
+    static final int MAXIMUM_DISTANCE = 800 * 1001 * 100;
     static final int MAXIMUM_INDEX = 801;
     static int[][] initGraph;
     public static void main(String[] args) throws Exception {
@@ -55,7 +55,7 @@ public class Main {
         int[][] end = dijkstra(p2);
         int p2e = end[p2][n-1];
         int result = Math.min(sp1+p1p2+p2e, sp2 + p1p2+p1e);
-        if(result == MAXIMUM_DISTANCE) {
+        if(result >= MAXIMUM_DISTANCE) {
             System.out.println(-1);
         } else {
             System.out.println(result);
@@ -80,7 +80,7 @@ public class Main {
                 //(targetNode의 연결된 노드의 비용 + start에서 target 노드의 비용) 과 start에서 연결된 노드의 원래 비용을 비교해서 업데이트
                 graph[start][j] = Math.min(graph[start][minIndex] + targetNode[j], graph[start][j]);
             }
-            visits[i] = true;
+            visits[minIndex] = true;
         }
 
         return initGraph;
