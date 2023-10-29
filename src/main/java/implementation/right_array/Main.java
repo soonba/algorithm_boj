@@ -15,7 +15,8 @@ public class Main {
         for (int i = 0; i < list.size(); i++) {
             int count = 1;
             Integer integer = list.get(i);
-            for (int j = i+1; j < list.size(); j++) {
+            int loopUntil = Math.min(i+5,list.size());
+            for (int j = i+1; j < loopUntil; j++) {
                 if(j == i+5) break;
                 if(list.get(j) < integer +5) count++;
             }

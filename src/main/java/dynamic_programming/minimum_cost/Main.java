@@ -1,57 +1,85 @@
 package dynamic_programming.minimum_cost;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 public class Main {
-    static int[] ends;
-    static int[] costs;
-    static int N;
-    static int minCost = Integer.MAX_VALUE;
-    static LinkedList<Integer>[] nodesList;
+    static int[][] nodes;
+    static int N; //집 개수
+    static int M; //간선의 개수
+    static boolean[] visits; //방문 여부
+    static int[] distance;
+
+    static final int MAX_COST = 100_000;
+
     public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
-        int M = Integer.parseInt(br.readLine());
-        ends = new int[M];
-        costs = new int[M];
-        nodesList  = new LinkedList[N];
-        for (int i = 0; i < M; i++) {
-            String[] S = br.readLine().split(" ");
-            int start = Integer.parseInt(S[0])-1;
-            int end = Integer.parseInt(S[1])-1;
-            int cost = Integer.parseInt(S[2]);
-            if (nodesList[start] == null) {
-                nodesList[start] = new LinkedList<>();
+        N = read();
+        M = read();
+        nodes = new int[N][N];
+        int totalMaxCost = (N - 1) * MAX_COST;
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i == j) {
+                    nodes[i][j] = 0;
+                    continue;
+                }
+                nodes[i][j] = totalMaxCost;
             }
-            nodesList[start].add(i);
-            ends[i] = end;
-            costs[i] = cost;
         }
-        String[] S = br.readLine().split(" ");
-        int sp = Integer.parseInt(S[0])-1;
-        int ep = Integer.parseInt(S[1])-1;
-        dfs(sp, ep, 0, new boolean[N]);
-        System.out.println(minCost);
+
+        for (int i = 0; i < M; i++) {
+            int start = read()-1;
+            int end = read()-1;
+            int cost = read();
+            nodes[start][end] = cost;
+        }
+        
+        int[][] resultSet = new int[N][N];
+
+        for (int i = 0; i < N; i++) {
+            visits = new boolean[N];
+            distance = new int[N];
+            dijkstra(i);
+            resultSet[i] = distance;
+        }
+        int A = read() - 1;
+        int B = read() - 1;
+        System.out.println(resultSet[A][B]);
     }
 
-    private static void dfs(int now, int ep, int sumCost, boolean[] visits) {
-        if(now == ep) {
-            //계산
-            minCost = Math.min(minCost, sumCost);
-            return;
+    private static void dijkstra(int start) {
+        for (int i = 0; i < N; i++) {
+            distance[i] = nodes[start][i];
         }
+        visits[start] = true;
 
-        LinkedList<Integer> nodes = nodesList[now];
-        visits[now] = true;
-        for (Integer nodeIndex : nodes) {
-            int next = ends[nodeIndex];
-            if(visits[next]) continue;
-            int nextCost = sumCost + costs[nodeIndex];
-            boolean[] nextBoolean = Arrays.copyOf(visits,N);
-            dfs(next, ep, nextCost, nextBoolean);
+        for (int i = 0; i < N-2; i++) { 
+            int current = getMinCostIndex();
+            visits[current] = true;
+
+            for (int j = 0; j < N; j++) {
+                if(!visits[j]) {
+                    distance[j] = Math.min(distance[j],distance[current]+ nodes[current][j] );
+                }
+            }
         }
+    }
+
+    private static int getMinCostIndex() {
+        int min = (N-1) * MAX_COST + 1;
+        int index = 0;
+        for (int i = 0; i < distance.length; i++) {
+            if(!visits[i] && distance[i] < min) {
+                min = distance[i];
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    private static int read() throws Exception {
+        int c, n = System.in.read() & 15;
+        while ((c = System.in.read()) > 32) n = (n << 3) + (n << 1) + (c & 15);
+        return n;
     }
 }
