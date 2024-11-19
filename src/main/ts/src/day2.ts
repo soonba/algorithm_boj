@@ -7,10 +7,8 @@ type Datum = {
   pw: string;
 };
 const loadInputs = async (path: string): Promise<string[]> => {
-  const input = await fs.readFile(path, 'utf-8');
-  const split = input.split('\n');
-  split.pop();
-  return split;
+  const input = (await fs.readFile(path, 'utf-8')).trimEnd();
+  return input.split('\n');
 };
 
 const parseToDatum = (input: string): Datum => {
@@ -21,30 +19,30 @@ const parseToDatum = (input: string): Datum => {
   return { lNum: +lNum, rNum: +rNum, pw, target };
 };
 
-const calcPart1 = (acc: number, { lNum, rNum, pw, target }: Datum) => {
+const calcPart1 = ({ lNum, rNum, pw, target }: Datum) => {
   let count = 0;
   for (let i = 1; i < pw.length; i++) {
     if (pw.charAt(i) === target) {
       if (++count > rNum) {
-        return acc;
+        return false;
       }
     }
   }
-  return count >= lNum ? ++acc : acc;
+  return count >= lNum;
 };
 
-const calcPart2 = (acc: number, { lNum, rNum, pw, target }: Datum) => {
+const calcPart2 = ({ lNum, rNum, pw, target }: Datum) => {
   let count = 0;
   count += pw.charAt(lNum) === target ? 1 : -1;
   count += pw.charAt(rNum) === target ? 1 : -1;
-  return count === 0 ? ++acc : acc;
+  return count === 0;
 };
 
 const day2 = async () => {
   const inputs = await loadInputs(`./input/day2.txt`);
   const data = inputs.map<Datum>(parseToDatum);
-  const result1 = data.reduce(calcPart1, 0);
-  const result2 = data.reduce(calcPart2, 0);
+  const result1 = data.filter(calcPart1).length;
+  const result2 = data.filter(calcPart2).length;
   console.log(result1);
   console.log(result2);
 };
